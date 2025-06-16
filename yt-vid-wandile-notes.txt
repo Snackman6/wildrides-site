@@ -14,3 +14,113 @@ Deploy from "GitHub" > Next. A pop-up will show requesting Permission for Amplif
 Choose "wildrides-site" repo > Next > Next > Save and deploy. Wait until it is deployed in Amplify Console.
 
 Open index.html > scroll down to "h2" tag > edit "how does this work?" to "how does this THING work?"
+
+To Add authentication / login Using SAML, use Cognito.
+
+click "main" > on the left "Authentication". **will create using Cognito
+
+Open Cognito > Create user pool
+***Comment Section: "Just a little note on Cognito since the console changed a bit. User Pools > Single-page application (SPA) > Name your application (Client App Name) > Sign-in Identifiers: Username > Attribute: Email > Create. Thank you TTT for all your great work!
+
+>Create User Pool
+**UI different from one in the video, but can still configure options on the left pane.**
+
+><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+Open User Pool > Copy User Pool ID (e.g. us-east-1_MlbW0LVAj)
+
+Scroll Down > App Integration Tab (**in New UI, Scroll down & click "wildrides-site" by "Set up your App" to take you to the app client)
+> Copy Client ID (e.g. 33aeugecaniure659848b0bmr1)
+
+In GitHub, Open Config file: Repository > js > open config.js > edit file > paste User Pool ID & Client ID copied from Cognito.
+> Copy region from AWS console (unless known off by heart) and paste it also > commit changes.
+
+Open Amplify App domain (i.e. https://main.d369tuwfu96bcr.amplifyapp.com)
+>follow steps to login (I used https://temp-mail.org/ to get a temporary email [sikakey209@ethsms.com], where a verification code is sent that is needed for me to login) > Login Again. 
+
+Then this message should appear:
+"This page is not functional yet because there is no API invoke URL configured in /js/config.js. You'll configure this in Module 3.
+In the meantime, if you'd like to test the Amazon Cognito user pool authorizer for your API, use the auth token below: (Copy the token that appears in the text box): 
+
+eyJraWQiOiJVeFpnbnRqRTBEUmc2T0VDTmp2RlNCN1lKSGlveFByM2t0QlpOYlBzemtNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI0NDE4NjRiOC1kMDExLTcwNGEtNzUwZi1hMmQwNDZmMmIzZTgiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfTWxiVzBMVkFqIiwiY29nbml0bzp1c2VybmFtZSI6InNpa2FrZXkyMDktYXQtZXRoc21zLmNvbSIsIm9yaWdpbl9qdGkiOiI4YzUwODRlNi1jZmMyLTRiNjgtOWRiYi1jZTg0ZTlhYWMxMDIiLCJhdWQiOiIzM2FldWdlY2FuaXVyZTY1OTg0OGIwYm1yMSIsImV2ZW50X2lkIjoiMmIwYWU0YmEtN2U2Yy00NjhmLTliZTQtNTM3ZDRlMDU3YTg0IiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE3NTAwOTY2MjUsImV4cCI6MTc1MDEwMDIyNSwiaWF0IjoxNzUwMDk2NjI1LCJqdGkiOiI2NGNjNWU4NC05M2VhLTQxODUtYjY5NS04ZmUzNTVjMDE3MmMiLCJlbWFpbCI6InNpa2FrZXkyMDlAZXRoc21zLmNvbSJ9.SIAc3jWynnpXCPeI5KY0t-F117gPsZcM4qiI1OIH7nVc5QJBJrqi-mkt-tKjreQRYch2uyok9yluz-IS6h9uhuVPqZiriiCIXX3xD9mFcllS1qH-rdjL_6P80aLPKzr6SLq243KIQqB9rIwpHoD9G7gU0g3gABsuaM_9fgJ8KPRYkSPL6p1GSeOiT0R_Ee_Leztk4r2yFgqpKrX534_y_LTNhlNCDfWhYtK_zfW_1Khc7_poFwn_yOS529chhgA3fzWYSVCDcYk2sEY_bV2F2RVrURhVcap5ZJsnak023EIQcJNE6tAS8ViyVR9nQXWqUXsIhdpz4lNHp4uBkbkz4g
+
+
+><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+Ride Sharing Functionality with DynamoDB & Lambda
+
+Open DynamoDB > Create table
+Table Name: Rides2025
+Partition Key: RideId of type 'String'
+> Create Table
+
+Click into Table and Copy the ARN for the table
+e.g. ARN: arn:aws:dynamodb:us-east-1:344494110546:table/Rides2025
+
+In Order to create Lambda Function, we need an execution role, which will require creating a New IAM role and attaching a Policy for  Lambda:
+
+IAM > Roles > Create Role > Trusted Entity Type "AWS service" > Use Case "Lambda" > Next > By Permission Policy Search "Lambda" and select "LambdaBasicExecutionRole" > Next > Role Name "WildRidesLambda2025" > scroll down & Create Role.
+
+After Creation, Search for and Open Role "WildRidesLambda2025" > Add Permissions > Create an Inline Policy > Select a Service "DynamoDB" (Need to give Lambda the permissions to put items into DynamoDB table) > Search "Putitem" (Write Attribute) and Select it > Resource "Specific" [As best practice, it is better to select a specific table using an ARN] > Add ARN > Switch to "Text" Tab > Paste ARN for DynamoDB Table > Add ARN > Next > Policy Name "DynamoDBWriteAccess" > Create Policy.
+
+LAMBDA
+Open Lambda > Create function > Author from scratch > Function Name "RequestUnicorn2025" > Runtime "Node.js 20.x" > Change default execution role > Use an existing role > choose "WildRidesLambda2025" > Create function.
+
+Code for the function is replaced with code from the repo. Copy all the Lambda code from the README & replace it in the lambda console code section. Added Codes and made minor changes to correspond with DynamoDB code. Changes Deployed****
+
+Create Test Event > Event Name "TestRequestEvent" > Copy Lambda Test Code from repo README at the bottom and Paste in Event JSON > Save > Click "Test" (if status code is 201, everything is good to go)
+
+Open DynamoDB table > Explore table items > Should see 1 entry & can open it (can sometimes take a while to show)
+
+><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+A way to invoke ride share functionality:
+
+API GATEWAY (Build HTTP, REST & WebSocket API's)
+
+Open API Gateway > Create API > REST API > Build > New API > API Name "WildRides2025API" > Create API
+
+"Now because we're using a Cognito user pool we have to create an authorizer here in API Gateway to
+Creating an authorizer so API Gateway can work with Cognito authenticate calls API Gateway is going to use Json web tokens or jwt's that are returned by Cognito so here we basically need to hook up the two parts by creating that authorizer that's over here on the left nav so
+
+***********************Authorizers
+To use AWS Lambda functions or Amazon Cognito user pools to control access to your API, you can create an authorizer. You must create the Lambda function or Amazon Cognito user pool separately before you set up the authorizer.
+
+You can use Amazon Verified Permissions to provision a Lambda authorizer for you. Verified Permissions can then validate tokens and authorize access based on granular security policies that reference user attributes and groups.********************
+
+Click Authorizers > create authorizer > Authorizor Name "WildRides" > Type is going to be Cognito > Select Cognito user pool "us-east-1 WildRides-v2025 > Token Source "Authorization" (starting with Capital 'A') > Create authorizer > Click into Authorizer once created
+
+in Test Authorizer section, by Token Value paste long token from website with no spaces at front or back > click Test Authorizer (***Got a 401 Error. Suspect it must've timeout. Reopened temp-email website & Refreshed the wildRydes Webpage and copied a new Auth Token. Got 200 Status code, Successful Test Event)
+
+Click on Resources on the left pane > Create resource (hook up the Lambda function) > Resource path leave blank > Resource name "ride" > enable "CORS" or else nothing will work. Domain on the site on Amplify will be different from the domain on API Gateway, so its going 'Cross-origin' > Create resource
+
+*******************Cross-origin resource sharing (CORS) is a browser security feature that restricts cross-origin HTTP requests from scripts running in the browser, such as a web application. To allow requests from scripts running in a browser, configure CORS for your API. When you configure CORS in the AWS Management Console, API Gateway creates an OPTIONS method for your API. API Gateway also replaces any existing CORS settings with your new configuration. This includes the values for any CORS headers, such as Access-Control-Allow-Origin: 'example.com'. For proxy integrations, you must also configure your integration to return CORS headers.*******************
+
+Create Method > Method Type "POST" > Integration Type "Lambda Function" > Activate "Lambda Proxy Integration" to 'Send the request to your Lambda function as a structured event' > choose Function "RequestUnicorn2025" > Scroll Down and Create Method.
+
+Scroll Down a Little, and Under Message Request Tab, Click Edit > Authorization choose Cognito User Pool authorizers "WildRides" > Save > Deploy API > Stage "New Stage" > Stage Name "dev"
+
+**********Create or select a stage where your API will be deployed. You can use the deployment history to revert or change the active deployment for a stage.****************
+
+Copy Invoke URL (e.g. I got https://mmvw7aotv6.execute-api.us-east-1.amazonaws.com/dev).
+go back to Githhub repo, in config.js and paste by invoke url > Commit changes. Initiated Deployment 7
+
+
+Can now go in website at https://main.d369tuwfu96bcr.amplifyapp.com/ride.html*** and can pick location on map & request a unicorn lol.
+
+If you check in DynamoDB, there should be more items to represent requests from the website.
+
+><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+Reached the End, time to Delete Resources and Clean up.
+Delete Amplify App by Selecting App > left Pane App Setting > General Settings > Delete App
+
+Cognito > Select User Pool > Delete user pool
+
+Lambda >Functions > RequestUnicorn2025 > Actions > Delete
+
+IAM > Roles > WildRidesLambda2025 > Delete
+
+DynamoDB > Tables > Rides2025 > Delete > include "Delete all CloudWatch alarms for Rides2025.", Exclude "Create an on-demand backup of Rides2025 before deletion"
+
+API Gateway > APIs > WildRides2025API > Delete
