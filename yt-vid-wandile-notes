@@ -12,3 +12,5 @@ Deploy from "GitHub" > Next. A pop-up will show requesting Permission for Amplif
 "Only Select Repositories" > "wildrides-site" > Save
 
 Choose "wildrides-site" repo > Next > Next > Save and deploy. Wait until it is deployed in Amplify Console.
+
+Open index.html > scroll down to "h2" tag > edit "how does this work?" to "how does this THING work?"
