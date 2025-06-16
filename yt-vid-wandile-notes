@@ -1,0 +1,14 @@
+https://youtu.be/K6v6t5z6AsU?si=9nLLRh_0pYljodwT
+
+The Tutorial starts off by copying the repository:
+- https://github.com/tinytechnicaltutorials/wildrydes-site > "Use this template" > "Create a new repository"
+
+Under "Repository name*" - add "wildrides-site" > Create repository
+
+in AWS Console, open "Amplify" > "Deploy App" or "Create New App"
+
+Deploy from "GitHub" > Next. A pop-up will show requesting Permission for Amplify > Update Permissions
+
+"Only Select Repositories" > "wildrides-site" > Save
+
+Choose "wildrides-site" repo > Next > Next > Save and deploy. Wait until it is deployed in Amplify Console.
